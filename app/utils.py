@@ -2,8 +2,9 @@ from flask_mail import Message
 import re
 import phonenumbers
 from phonenumbers import country_code_for_region
+from app.extensions import mail
  
-def send_email_to_user(email, message, mail):
+def send_email_to_user(email, message):
     
     recipients = [email]
 
@@ -75,4 +76,3 @@ def sanitize_subProd(name: str) -> str:
     elif res in ["Posters", "Poster"]:
         res = "Posters"
     return res
-

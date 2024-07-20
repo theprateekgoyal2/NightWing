@@ -4,13 +4,11 @@ from app.models.popscape import Category, SubCategory, Products
 from app.extensions import db
 from app.utils import abbreviationFunc, generate_filename, sanitize_category, sanitize_name, sanitize_subProd
 from app.misc import UPLOAD_FOLDER
-# from auth.decorators import token_required
+from app.decorators import token_required, admin_access
 from sqlalchemy.exc import SQLAlchemyError
 import os
 
 class CategoryView(MethodView):
-
-    # decorators = [token_required]
     
     # To view all the categories present
     def get(self):
@@ -26,7 +24,8 @@ class CategoryView(MethodView):
             # log.error(f"Database error: {str(e)}")
             return jsonify({"error": "Database error", "message": str(e)}), 500
 
-    # To add a new category 
+    # To add a new category
+    @admin_access
     def post(self):
         if not request.is_json:
             return jsonify({"error": "Invalid JSON"}), 400
@@ -66,6 +65,7 @@ class CategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
         
     # To edit a category
+    @token_required
     def put(self):
         id = request.args.get('id')
         if not id:
@@ -109,6 +109,7 @@ class CategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
 
     # To delete a category
+    @admin_access
     def delete(self):
         id = request.args.get('id')
         if not id:
@@ -157,6 +158,7 @@ class SubCategoryView(MethodView):
             return jsonify({"error": "Database error", "message": str(e)}), 500
     
     # To add sub-categorie(s) to a category
+    @admin_access
     def post(self):
         id = request.args.get('id')
         if not id:
@@ -195,6 +197,7 @@ class SubCategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
         
     # To edit any sub-categorie(s)
+    @token_required
     def put(self):
         s_id = request.args.get('sid')
         if not s_id:
@@ -249,6 +252,7 @@ class SubCategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
     
     # To delete any sub-categorie(s)
+    @admin_access
     def delete(self):
         id = request.args.get('id')
         s_id = request.args.get('sid')
@@ -326,6 +330,7 @@ class ProductsView(MethodView):
             return jsonify({"error": "Database error", "message": str(e)}), 500
         
     # To add product(s) to sub-category
+    @admin_access
     def post(self):
         # Check if 'id' parameter is provided in the request
         id = request.args.get('sid')
@@ -396,6 +401,7 @@ class ProductsView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
 
     # To replace a product file
+    @token_required
     def put(self):
         # Check if 'sid' and 'pid' parameters are provided in the request
         sid = request.args.get('sid')
@@ -457,6 +463,7 @@ class ProductsView(MethodView):
             # log.error(f"Unexpected error: {str(e)}")
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
         
+    @admin_access
     def delete(self):
         # Check if 'sid' and 'pid' parameters are provided in the request
         sid = request.args.get('sid')
@@ -503,4 +510,3 @@ class ProductsView(MethodView):
             # Log the error message
             # log.error(f"Unexpected error: {str(e)}")
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
-        

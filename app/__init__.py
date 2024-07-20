@@ -1,11 +1,19 @@
 from flask import Flask
-
+import os
 from config import Config
 from app.extensions import db, mail, bcrypt, login_manager, jwt_manager
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # SMTP Credentials
+    app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
 
     # Initialize Flask extensions here
     db.init_app(app)
