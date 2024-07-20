@@ -75,3 +75,4 @@ def sanitize_subProd(name: str) -> str:
     elif res in ["Posters", "Poster"]:
         res = "Posters"
     return res
+

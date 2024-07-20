@@ -70,3 +70,4 @@ class Products(db.Model):
     
     def __repr__(self):
         return '<Products %r>' % self.name
+    

@@ -32,3 +32,4 @@ env/
 env37/
 env38/
 .venv/
+static/

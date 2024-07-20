@@ -503,3 +503,4 @@ class ProductsView(MethodView):
             # Log the error message
             # log.error(f"Unexpected error: {str(e)}")
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
+        
