@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables file
+# .env
+
+# Logs
+*.log
+
+# Run-time data
+*.sqlite
+
+# Development files
+*.db
+*.db-journal
+
+# IDE files
+.vscode/
+.idea/
+
+# Compiled Python files
+*.pyc
+
+# Compiled C extensions
+*.so
+
+# Dependency directories
+venv/
+env/
+env37/
+env38/
+.venv/
