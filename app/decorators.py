@@ -4,7 +4,7 @@ from app.models.auth import User
 from flask_jwt_extended import decode_token
 import jwt
 
-def token_required(f):
+def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
 

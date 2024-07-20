@@ -29,6 +29,9 @@ def create_app(config_class=Config):
     from app.popscape import popscape_bp
     app.register_blueprint(popscape_bp)
 
+    from app.cart import cart_bp
+    app.register_blueprint(cart_bp)
+
     # Initialize SQLAlchemy
     with app.app_context():
         db.create_all()

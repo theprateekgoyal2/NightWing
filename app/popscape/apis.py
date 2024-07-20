@@ -4,7 +4,7 @@ from app.models.popscape import Category, SubCategory, Products
 from app.extensions import db
 from app.utils import abbreviationFunc, generate_filename, sanitize_category, sanitize_name, sanitize_subProd
 from app.misc import UPLOAD_FOLDER
-from app.decorators import token_required, admin_access
+from app.decorators import login_required, admin_access
 from sqlalchemy.exc import SQLAlchemyError
 import os
 
@@ -65,7 +65,7 @@ class CategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
         
     # To edit a category
-    @token_required
+    @login_required
     def put(self):
         id = request.args.get('id')
         if not id:
@@ -197,7 +197,7 @@ class SubCategoryView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
         
     # To edit any sub-categorie(s)
-    @token_required
+    @login_required
     def put(self):
         s_id = request.args.get('sid')
         if not s_id:
@@ -360,6 +360,14 @@ class ProductsView(MethodView):
             subProd = sanitize_subProd(subProd)
             if not subProd:
                 return jsonify({"error": "Invalid subProduct"}), 400
+            
+            # Get the price from form data
+            price = request.form.get('price')
+            if not price:
+                if subProd == "Posters":
+                    price = 590
+                if subProd == "Polaroids": 
+                    price = 280
 
             # Get category and article name
             category = item.category.name
@@ -379,13 +387,13 @@ class ProductsView(MethodView):
             file.save(os.path.join(save_folder, f'{filename}.png'))
 
             # Create and add the new product entry to the database
-            product = Products(subCategory_id=id, name=filename, subProduct=subProd)
+            product = Products(subCategory_id=id, name=filename, subProduct=subProd, price=price)
             db.session.add(product)
 
             # Increment the total products count and commit the transaction
             item.totalProducts += 1
             db.session.commit()
-            return jsonify({'message': 'Image uploaded successfully', 'category': category, 'filename': filename})
+            return jsonify({'message': 'Image uploaded successfully', 'category': category, 'filename': filename, 'price': price})
 
         except SQLAlchemyError as e:
             # Rollback the transaction in case of a database error
@@ -401,7 +409,7 @@ class ProductsView(MethodView):
             return jsonify({"error": "Unexpected error", "message": str(e)}), 500
 
     # To replace a product file
-    @token_required
+    @login_required
     def put(self):
         # Check if 'sid' and 'pid' parameters are provided in the request
         sid = request.args.get('sid')
@@ -431,21 +439,40 @@ class ProductsView(MethodView):
             if file.filename == '':
                 return jsonify({"error": "No file selected"}), 400
 
-            # Get the subProduct, category, and article name
+            # Get the subProduct, category, price, filename, and article name
             subProd = product.subProduct
+            oldprice = product.price
             category = subcategory.category.name
             articleName = subcategory.name
+            filename = product.name
 
             # Check if the category is valid
             if category not in ['Movies', 'Shows', 'Music-Albums']:
                 return jsonify({'error': 'Invalid category'}), 400
+            
+            # Get the price from form data
+            price = request.form.get('price')
+            if not price:
+                if price == 0:
+                    if subProd == "Posters":
+                        price = 590
+                    if subProd == "Polaroids": 
+                        price = 280
+                    # Update the price for product in the database
+                    if product.price != price:
+                        product.price = price
+                        db.session.commit()
+
+            if oldprice != price:
+                # Update the price for product in the database
+                product.price = price
+                db.session.commit()
 
             # Fetch the folder where the image needs to be replaced
             save_folder = os.path.join(UPLOAD_FOLDER, category, subProd, articleName)
             os.makedirs(save_folder, exist_ok=True)
 
             # Save the replaced file with the existing filename
-            filename = product.name
             file.save(os.path.join(save_folder, f'{filename}.png'))
 
             return jsonify({'message': 'Image replaced successfully', 'category': category, 'filename': filename})

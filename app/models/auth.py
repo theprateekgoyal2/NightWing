@@ -32,7 +32,8 @@ class User(UserMixin, db.Model):
             'name': self.name,
             'email': self.email,
             'mobileNumber': self.mobileNumber,
-            'is_admin': self.is_admin
+            'is_admin': self.is_admin,
+            'carts': [cart.serialize() for cart in self.carts]
         }
 
     def __repr__(self):

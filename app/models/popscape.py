@@ -54,20 +54,22 @@ class Products(db.Model):
     subProduct = db.Column(db.String(255), nullable=False)
     subCategory_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
     subCategory = db.relationship('SubCategory', backref=db.backref('products', lazy=True))
+    price = db.Column(db.Float, nullable=False)
 
-    def __init__ (self, name, subCategory_id, subProduct):
+    def __init__ (self, name, subCategory_id, subProduct, price):
         self.name = name
         self.subCategory_id = subCategory_id
         self.subProduct = subProduct
+        self.price = price
 
     def serialize(self):
         return {
             'id': self.id,
             'subCategory_ID': self.subCategory_id,
             'name': self.name,
-            'subProduct': self.subProduct
+            'subProduct': self.subProduct,
+            'price': self.price
         }
     
     def __repr__(self):
         return '<Products %r>' % self.name
-    
