@@ -35,7 +35,6 @@ def create_app(config_class=Config):
     # Initialize SQLAlchemy
     with app.app_context():
         db.create_all()
-        app.run(debug=True)
 
     @app.route('/test/')
     def test_page():
