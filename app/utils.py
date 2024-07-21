@@ -1,8 +1,10 @@
 from flask_mail import Message
 import re
 import phonenumbers
+from flask_jwt_extended import decode_token
 from phonenumbers import country_code_for_region
 from app.extensions import mail
+from app.models.auth import User
  
 def send_email_to_user(email, message):
     
@@ -76,3 +78,9 @@ def sanitize_subProd(name: str) -> str:
     elif res in ["Posters", "Poster"]:
         res = "Posters"
     return res
+
+
+def get_user_id(token):
+    data = decode_token(token)
+    current_user = User.query.filter_by(public_id=data['sub']).first()
+    return current_user.id if current_user else None
