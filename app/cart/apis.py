@@ -7,24 +7,17 @@ from app.models.popscape import Products
 from app.decorators import login_required
 from flask_jwt_extended import decode_token
 from app.extensions import db
-
+from app.utils import get_user_id
 class CartView(MethodView):
     
     decorators = [login_required]
-
-    # This function returns user id
-    @staticmethod
-    def get_user_id(token):
-        data = decode_token(token)
-        current_user = User.query.filter_by(public_id=data['sub']).first()
-        return current_user.id if current_user else None
 
     # This view will retrieve all the carts for the particular user
     def get(self):
         
         # Decoding the payload to fetch the stored details
         token = request.headers['token']
-        user_id = self.get_user_id(token)
+        user_id = get_user_id(token)
 
         try:
             user = User.query.get(user_id)
@@ -81,13 +74,6 @@ class CartView(MethodView):
 class CartItemView(MethodView):
 
     decorators = [login_required]
-
-    # This function returns user id
-    @staticmethod
-    def get_user_id(token):
-        data = decode_token(token)
-        current_user = User.query.filter_by(public_id=data['sub']).first()
-        return current_user.id if current_user else None
     
     def get(self):
         

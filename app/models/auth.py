@@ -1,6 +1,7 @@
 from app.extensions import db, bcrypt
 from datetime import datetime
 from flask_login import UserMixin
+from sqlalchemy.dialects.sqlite import JSON
 
 class User(UserMixin, db.Model):
 
@@ -38,3 +39,29 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f"<User {self.name}>"
+
+class Address(db.Model):
+
+    __tablename__ = "Address"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    meta_details = db.Column(JSON, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __init__(self, user_id, meta_details):
+        self.user_id = user_id
+        self.meta_details = meta_details
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'meta_details': self.meta_details,
+            'date_created': self.date_created.isoformat(),
+            'date_modified': self.date_modified.isoformat(),
+        }
+
+    def __repr__(self):
+        return f'<Address {self.meta_details}>'
