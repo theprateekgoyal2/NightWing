@@ -7,6 +7,10 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # Set debug mode explicitly
+    app.config['DEBUG'] = True
+    app.config['ENV'] = 'development'
+
     # SMTP Credentials
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
     app.config['MAIL_PORT'] = 587

@@ -34,3 +34,4 @@ env38/
 .venv/
 .static/
 static/
+howToRunDocker.md
