@@ -1,11 +1,13 @@
 from flask import Flask
 import os
-from config import Config
+from config import Config, ProdConfig, TestConfig
 from app.extensions import db, mail, bcrypt, login_manager, jwt_manager
 
-def create_app(config_class=Config):
+def create_app(config_class=TestConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    print(f"Using config: {config_class.__name__}")
+    print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
     # Set debug mode explicitly
     app.config['DEBUG'] = True
