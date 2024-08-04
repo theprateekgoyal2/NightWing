@@ -1,0 +1,72 @@
+.
+├── Dockerfile
+├── README.md
+├── __pycache__
+│   └── config.cpython-311.pyc
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── auth
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   └── apis.py
+│   ├── cart
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   └── apis.py
+│   ├── checkout
+│   │   ├── __init__.py
+│   │   └── apis.py
+│   ├── decorators.py
+│   ├── extensions.py
+│   ├── misc.py
+│   ├── models
+│   │   ├── __pycache__
+│   │   ├── auth.py
+│   │   ├── cart.py
+│   │   ├── checkout.py
+│   │   └── popscape.py
+│   ├── popscape
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   └── apis.py
+│   └── utils.py
+├── app.db
+├── config.py
+├── docker-compose.yml
+├── howToRunDocker.md
+├── requirements.txt
+├── run.py
+├── static
+│   └── popscape
+│       └── Shows
+│           ├── Polaroids
+│           │   └── House Of The Dragons
+│           └── Posters
+│               └── House Of The Dragons
+│                   ├── 2022-HOTD:001.png
+│                   ├── 2022-HOTD:002.png
+│                   └── 2022-HOTD:003.png
+├── test.db
+├── testing
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── auth
+│   │   ├── __pycache__
+│   │   └── test_login.py
+│   ├── conftest.py
+│   ├── data
+│   │   ├── auth
+│   │   │   └── test_login_data.json
+│   │   └── popscape
+│   │       ├── test_create_subcategory.json
+│   │       ├── test_update_subcategory.json
+│   │       └── ...
+│   ├── popscape
+│   │   ├── __pycache__
+│   │   ├── test_categoryview.py
+│   │   └── test_subcategoryview.py
+│   └── utils
+│       ├── assertion_utils.py
+│       └── common_utils.py
+└── venv
